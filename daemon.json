@@ -1,0 +1,13 @@
+{
+   "registry-mirrors": [
+        "https://registry.docker-cn.com", 
+        "https://gsnhy99b.mirror.aliyuncs.com", 
+        "https://cr.console.aliyun.com/", 
+        "http://hub-mirror.c.163.com", 
+        "https://docker.mirrors.ustc.edu.cn"], 
+   "exec-opts":["native.cgroupdriver=systemd"],
+   "log-driver": "json-file", 
+   "log-opts": {
+     "max-size": "100m"
+   }
+}
