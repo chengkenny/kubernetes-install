@@ -968,7 +968,13 @@ source /etc/profile
 
 官方的github
 
- https://github.com/kubernetes/dashboard 
+https://github.com/kubernetes/dashboard 
+
+
+
+Docker hub
+
+https://hub.docker.com/r/kubernetesui/dashboard 
 
 
 
@@ -1003,30 +1009,58 @@ update dashborad.yaml to master /root
 
 Then deploy new beta:
 
+```shell
+[root@master1 ~]# kubectl apply -f recommended.yaml 
+namespace/kubernetes-dashboard created
+serviceaccount/kubernetes-dashboard created
+service/kubernetes-dashboard created
+secret/kubernetes-dashboard-certs created
+secret/kubernetes-dashboard-csrf created
+secret/kubernetes-dashboard-key-holder created
+configmap/kubernetes-dashboard-settings created
+role.rbac.authorization.k8s.io/kubernetes-dashboard created
+clusterrole.rbac.authorization.k8s.io/kubernetes-dashboard created
+rolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
+clusterrolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
+deployment.apps/kubernetes-dashboard created
+service/dashboard-metrics-scraper created
+deployment.apps/dashboard-metrics-scraper created
 ```
-kubectl apply -f dashborad.yaml
-```
 
 
-
-
-
-### 3. 创建kubernetes-dashboard服务和对应的pod
 
 ```shell
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
+[root@master1 k8s-test]# kubectl get pod -n kubernetes-dashboard
+NAME                                        READY   STATUS    RESTARTS   AGE
+dashboard-metrics-scraper-dc6947fbf-jrppj   1/1     Running   0          43m
+kubernetes-dashboard-5d4dc8b976-nlblb       1/1     Running   0          43m
 
-或者
-
-wget https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
-
-kubectl apply -f kubernetes-dashboard.yaml
-
-
-如果发现该链接失效，请访问https://github.com/kubernetes/dashboard，然后查找最新的链接。
 ```
 
 
+
+
+
+### 3. 本地访问
+
+```shell
+[root@master1 ~]# kubectl proxy
+Starting to serve on 127.0.0.1:8001
+
+然后访问即可：http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+```
+
+
+
+### 4. 验证登录
+
+
+
+ 查看Token，然后使用token登录。 
+
+```
+kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep kubernetes-dashboard-token | awk '{print $1}')
+```
 
 
 
